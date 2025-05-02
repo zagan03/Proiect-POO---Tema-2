@@ -1,51 +1,28 @@
-# Nu primesc notă pentru că nu am pus titlu și descriere
+## Tema 2 - Wordle - Joc de ghicit cuvinte din 5 litere
 
-### Folosiți template-ul corespunzător grupei voastre!
+### Descriere Generala
+  Proiectul abordeaza un joc in linia de comanda unde utilizatorul trebuie sa ghiceasca un cuvant secret format
+din 5 litere. Cuvintele sunt validate pe baza unor reguli, iar utilizatorul primeste feedback dupa fiecare 
+incercare, cu privire la pozitiile literelor.
 
-| Laborant  | Link template                                |
-|-----------|----------------------------------------------|
-| Dragoș B  | https://github.com/Ionnier/oop-template      |
-| Tiberiu M | https://github.com/MaximTiberiu/oop-template |
-| Marius MC | https://github.com/mcmarius/oop-template     |
+### Cum se joaca ?
+1. La inceputul jocului, se genereaza automat un cuvant secret de 5 litere dintr-un dictionar care se afla in 
+fisierul tastatura.txt.
+2. Utilizatorul are 6 incercari pentru a ghici acest cuvant, iar scorul maxim pe care il poate obtine este 120.
+3. Dupa fiecare incercare:
+   - daca cuvantul introdus nu este valid (nu are 5 litere, contine caractere invalide sau nu exista in dictionar)
+     utilizatorul va primi o eroare si va putea incerca din nou.
+   - daca este valid, va primi feedback in stilul wordle-ului original, spre exemplu, cu verde vor fi afisate literele
+   aflate pe pozitiile lor, cu galben literele care se regasesc in cuvant, dar care nu sunt pe pozitia lor
+   corecta, iar cu gri, literele care nu se afla in cuvant.
+4. Jocul se termina fie cand cuvantul este ghicit in limita a celor 6 incercari, fie cand se epuizeaza toate 
+incercarile.
 
-### Important!
+### Reguli de validare a cuvintelor :
+1. Cuvantul trebuie sa aiba exact 5 litere. (LengthValidator)
+2. Cuvantul trebuie sa contina doar litere ale alfabetului englez. (AlphabetValidator)
+3. Cuvintele trebuie sa se regaseasca intr-un dictionar valid, adica cel din fisierul "tastatura.txt". (DictionaryValidator)
 
-Aveți voie cu cod generat de modele de limbaj la care nu ați contribuit semnificativ doar în folder-ul `generated`.
-Codul generat pus "ca să fie"/pe care nu îl înțelegeți se punctează doar pentru puncte bonus, doar în contextul
-în care oferă funcționalități ajutătoare și doar dacă are sens.
-
-O cerință nu se consideră îndeplinită dacă este realizată doar prin cod generat.
-
-- **Fără cod de umplutură/fără sens!**
-- **Fără copy-paste!**
-- **Fără variabile globale!**
-- **Fără atribute publice!**
-
-### Tema 0
-
-- [ ] Nume proiect (poate fi schimbat ulterior)
-- [ ] Scurtă descriere a temei alese, ce v-ați propus să implementați
-
-## Tema 1
-
-#### Cerințe
-- [ ] definirea a minim **3-4 clase** folosind compunere cu clasele definite de voi; moștenirile nu se iau în considerare aici
-- [ ] constructori de inițializare cu parametri pentru fiecare clasă
-- [ ] pentru o aceeași (singură) clasă: constructor de copiere, `operator=` de copiere, destructor
-<!-- - [ ] pentru o altă clasă: constructor de mutare, `operator=` de mutare, destructor -->
-<!-- - [ ] pentru o altă clasă: toate cele 5 funcții membru speciale -->
-- [ ] `operator<<` pentru **toate** clasele pentru afișare (`std::ostream`) folosind compunere de apeluri cu `operator<<`
-- [ ] cât mai multe `const` (unde este cazul) și funcții `private`
-- [ ] implementarea a minim 3 funcții membru publice pentru funcționalități netriviale specifice temei alese, dintre care cel puțin 1-2 funcții mai complexe
-  - nu doar citiri/afișări sau adăugat/șters elemente într-un/dintr-un vector
-- [ ] scenariu de utilizare **cu sens** a claselor definite:
-  - crearea de obiecte și apelarea tuturor funcțiilor membru publice în main
-  - vor fi adăugate în fișierul `tastatura.txt` DOAR exemple de date de intrare de la tastatură (dacă există); dacă aveți nevoie de date din fișiere, creați alte fișiere separat
-- [ ] minim 50-55% din codul propriu să fie C++, `.gitattributes` configurat corect
-- [ ] tag de `git`: de exemplu `v0.1`
-- [ ] serviciu de integrare continuă (CI) cu **toate bifele**; exemplu: GitHub Actions
-
-## Tema 2
 
 #### Cerințe
 - [ ] separarea codului din clase în `.h` (sau `.hpp`) și `.cpp`
@@ -70,23 +47,75 @@ O cerință nu se consideră îndeplinită dacă este realizată doar prin cod g
 - [ ] STL
 - [ ] cât mai multe `const`
 - [ ] funcții *de nivel înalt*, de eliminat cât mai mulți getters/setters/funcții low-level
-- [ ] minim 75-80% din codul propriu să fie C++
-- [ ] la sfârșit: commit separat cu adăugarea unei noi clase derivate fără a modifica restul codului, **pe lângă cele 3 derivate deja adăugate** din aceeași ierarhie
-  - noua derivată nu poate fi una existentă care a fost ștearsă și adăugată din nou
-  - noua derivată va fi integrată în codul existent (adică va fi folosită, nu adăugată doar ca să fie)
-- [ ] tag de `git` pe commit cu **toate bifele**: de exemplu `v0.2`
 
-## Tema 3
+### Indeplinire cerinte:
+- **Clase mostenite**:
+  - 'WordValidator' = clasa abstracta de baza
+  - Derivate : 'LengthValidator', 'AlphabetValidator', 'DictionaryValidator'
+  - 'FeedbackStrategy' = clasa abstracta de baza
+  - 'ClassicFeedback' = clasa derivata care se foloseste pentru feedback-ul din linia de comanda.
 
-#### Cerințe
-- [ ] 2 șabloane de proiectare (design patterns)
-- [ ] o clasă șablon cu sens; minim **2 instanțieri**
-  - [ ] preferabil și o funcție șablon (template) cu sens; minim 2 instanțieri
-- [ ] minim 85% din codul propriu să fie C++
-<!-- - [ ] o specializare pe funcție/clasă șablon -->
-- [ ] tag de `git` pe commit cu **toate bifele**: de exemplu `v0.3` sau `v1.0`
+- **Functii virtuale**
+  - 'validate() este functie pur virtuala in 'WordValidator', redefinita in fiecare derivata si este apelata 
+    polimorfic in main() printr-un 'std::vector<std::unique_ptr<WordValidator>>'.
+  - functia getFeedback() este functie pur virtuala in 'FeedbackStrategy', redefinita in derivata ClassicFeedback
+    si cuprinde logica feedback-ului oferit utilizatorului la fiecare input introdus.
 
-## Instrucțiuni de compilare
+- **Constructori virtuali (clone)**
+  - fiecare validator implementeaza un clone() care returneaza un 'std::unique_ptr<WordValidator>'
+  - am folosit in main() la linia `validators.emplace_back(dict->clone());` pentru a adauga DictionaryValidator in vectorul de unique_ptr validators, 
+  iar nevoia de clonare vine de la faptul ca nu putem muta un unique_ptr.
+
+- **Pointerii la clasa de bază vor fi atribute ale altei clase, nu doar niște pointeri/referințe în main** :
+  - in cadrul clasei Game, am utilizat un vector de unique_ptr<WordValidator> care stocheaza obiecte de tipuri derivate din WordValidator. Astfel, acesti pointeri
+  - sunt atribute ale clasei Game.
+
+- **Apel constructor de baza**
+  - derivatele apeleaza constructorul de baza WordValidator cu parametri comuni
+
+- **Pointer de baza cu functie virtuala**
+  - folosesc un `std::vector<std::unique_ptr<WordValidator>>` pentru a stoca validatori si a apela `validate()`
+
+- **`dynamic_cast`**:
+  - in `main()` folosesc `dynamic_cast` pentru a realiza downcasting din clasa de baza `WordValidator` catre clasele derivate. Acest mecanism imi permite sa identific dinamic tipul fiecarui validator,
+  stocat in vectorul validators, astfel incat sa pot afisa pe ecran utilizatorului regulile specifice fiecarui validator.
+  - de asemenea, pentru toate clasele derivate ale validatorilor, am implementat:
+    - constructori de copiere
+    - operatorul copy and swap
+    - operator de afisare
+    - destructor
+
+- **Smart pointers**:
+  - `std::unique_ptr` este folosit pentru gestionarea dinamica a validatorilor.
+
+- **Exceptii**:
+  - clasa `ValidatorExceptions` derivă din `std::exception`.
+    - derivatele AlphabetValidatorException, LengthValidatorException, DictionaryValidatorException sunt prinse in 
+    functia Game::play(), caz in care se poate reintroduce inputul mai departe de catre utilizator.
+    - metoda `what()` este suprascrisa pentru a returna un mesaj personalizat de eroare, care poate fi afisat cu std::cerr << e.what(); 
+  - in main avem cele trei exceptii:
+    - throw ValidatorExceptions("Cuvantul din dictionar nu are 5 litere!" + cuvantAles) = exceptie care are loc in cazul in care se genereaza un cuvant din dictionar cu lungime < 5.
+    - throw ValidatorExceptions("Lista de validatori este goala. Nu putemm continua jocul") = exceptie care are loc in cazul in care dictionarul este gol.
+    - throw EmptyDictionaryException("Fisierul " + filename + " nu contine cuvinte valide.") = care este prinsa in main la generarea dictionarului din fisierul `tastatura.txt` cand fisierul nu poate fi deschis.
+
+- **functii si atribute `static`**:
+  - Ex: `WordChecker::isValidChar()` este funcție `static`, Game::score() este functie 'static',
+  - Game::printRemainingAttempts() este functie 'static'.
+  - size_t LengthValidator::defaultLength = 5 este atribut 'static'.
+
+- **STL**:
+  - `std::vector`, `std::string`, `std::ifstream`, `std::random`, `std::unordered_set`, `std::memory`, `std::algorithm`,
+  - `std::unordered_map`, `std::random`
+
+- **`const`**:
+  - Metodele `validate()`, `clone()` si altele sunt declarate `const`.
+  - Parametrii transmiși prin `const &` unde este cazul.
+
+- **Nivel înalt, fără getters/setters inutile**:
+  - functiile de validare si feedback sunt centralizate si nu expun datele interne inutil.
+
+
+#### Instrucțiuni de compilare
 
 Proiectul este configurat cu CMake.
 
@@ -116,18 +145,14 @@ cmake --build build --config Debug --parallel 6
 Cu opțiunea `parallel` specificăm numărul de fișiere compilate în paralel.
 
 
-3. Pasul de instalare (opțional)
-```sh
-cmake --install build --config Debug --prefix install_dir
-# sau ./scripts/cmake.sh install
-```
-
-Vezi și [`scripts/cmake.sh`](scripts/cmake.sh).
-
-Observație: folderele `build/` și `install_dir/` sunt adăugate în fișierul `.gitignore` deoarece
-conțin fișiere generate și nu ne ajută să le versionăm.
 
 
-## Resurse
+## Bibliografie
 
-- adăugați trimiteri către resursele externe care v-au ajutat sau pe care le-ați folosit
+- https://github.com/mcmarius/poo/tree/master/tema-2
+- https://cplusplus.com/reference/algorithm//
+- https://en.cppreference.com/w/cpp/numeric/random/uniform_int_distribution
+- https://www.youtube.com/watch?v=L14j5RZO0ok
+- https://www.youtube.com/watch?v=UOB7-B2MfwA&t=303s
+- https://www.listedecuvinte.com/cuvinte5literepagina4.htm - folosit pentru preluarea cuvintelor.
+- https://wordly.org/ - jocul original dupa care m-am inspirat.

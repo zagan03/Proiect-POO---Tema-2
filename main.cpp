@@ -1,57 +1,63 @@
+#include "LengthValidator.h"
+#include "WordValidator.h"
+#include "AlphabetValidator.h"
+#include "ClassicFeedback.h"
+#include "FeedbackStrategy.h"
+#include "Game.h"
+#include "DictionaryValidator.h"
 #include <iostream>
-#include <array>
+#include "ValidatorExceptions.h"
 
-#include <Helper.h>
+int main()
+{
+    try
+    {
+        std::vector<std::unique_ptr<WordValidator>> validators;
 
-int main() {
-    std::cout << "Hello, world!\n";
-    std::array<int, 100> v{};
-    int nr;
-    std::cout << "Introduceți nr: ";
-    /////////////////////////////////////////////////////////////////////////
-    /// Observație: dacă aveți nevoie să citiți date de intrare de la tastatură,
-    /// dați exemple de date de intrare folosind fișierul tastatura.txt
-    /// Trebuie să aveți în fișierul tastatura.txt suficiente date de intrare
-    /// (în formatul impus de voi) astfel încât execuția programului să se încheie.
-    /// De asemenea, trebuie să adăugați în acest fișier date de intrare
-    /// pentru cât mai multe ramuri de execuție.
-    /// Dorim să facem acest lucru pentru a automatiza testarea codului, fără să
-    /// mai pierdem timp de fiecare dată să introducem de la zero aceleași date de intrare.
-    ///
-    /// Pe GitHub Actions (bife), fișierul tastatura.txt este folosit
-    /// pentru a simula date introduse de la tastatură.
-    /// Bifele verifică dacă programul are erori de compilare, erori de memorie și memory leaks.
-    ///
-    /// Dacă nu puneți în tastatura.txt suficiente date de intrare, îmi rezerv dreptul să vă
-    /// testez codul cu ce date de intrare am chef și să nu pun notă dacă găsesc vreun bug.
-    /// Impun această cerință ca să învățați să faceți un demo și să arătați părțile din
-    /// program care merg (și să le evitați pe cele care nu merg).
-    ///
-    /////////////////////////////////////////////////////////////////////////
-    std::cin >> nr;
-    /////////////////////////////////////////////////////////////////////////
-    for(int i = 0; i < nr; ++i) {
-        std::cout << "v[" << i << "] = ";
-        std::cin >> v[i];
+        // Adaugăm validatorii
+        validators.emplace_back(std::make_unique<LengthValidator>(5));
+        validators.emplace_back(std::make_unique<AlphabetValidator>());
+
+        // Verificam daca fisierul tastatura.txt se deschide
+        std::unique_ptr<DictionaryValidator> dict = std::make_unique<DictionaryValidator>("tastatura.txt");
+
+        std::string cuvantAles = dict->getRandomWord();
+
+        // validam cuvantul ce trebuie ghicit, in cazul in care nu are cinci litere, aruncam exceptie
+        if (cuvantAles.length() != 5)
+            throw ValidatorExceptions("Cuvantul din dictionar nu are 5 litere!" + cuvantAles);
+        validators.emplace_back(dict->clone());
+        if (validators.empty())
+            throw ValidatorExceptions("Lista de validatori este goala. Nu putemm continua jocul");
+        Game Joc(cuvantAles, validators, 6);
+
+        // Folosit pentru a arata utilizatorului Regulile in functie de care trebuie alese cuvintele.
+
+        for (const auto& validator : validators) {
+            std::cout << "Clasa de baza: WordValidator | Clasa derivata: ";
+
+            if (auto lengthValidator = dynamic_cast<LengthValidator*>(validator.get())) {
+                std::cout << "LengthValidator\n";
+                std::cout << *lengthValidator;
+            }
+            else if (auto dictValidator = dynamic_cast<DictionaryValidator*>(validator.get())) {
+                std::cout << "DictionaryValidator\n";
+                std::cout << *dictValidator;
+            }
+            else if (auto alphaValid = dynamic_cast<AlphabetValidator*>(validator.get())) {
+                std::cout << "AlphabetValidator\n";
+                alphaValid->printDetails();
+            }
+        }
+
+        // Rulam jocul
+        Joc.play();
     }
-    std::cout << "\n\n";
-    std::cout << "Am citit de la tastatură " << nr << " elemente:\n";
-    for(int i = 0; i < nr; ++i) {
-        std::cout << "- " << v[i] << "\n";
+    catch (const ValidatorExceptions& e) {
+        std::cerr << "Exceptie prinsa in main: " << e.what() << std::endl;
     }
-    ///////////////////////////////////////////////////////////////////////////
-    /// Pentru date citite din fișier, NU folosiți tastatura.txt. Creați-vă voi
-    /// alt fișier propriu cu ce alt nume doriți.
-    /// Exemplu:
-    /// std::ifstream fis("date.txt");
-    /// for(int i = 0; i < nr2; ++i)
-    ///     fis >> v2[i];
-    ///
-    ///////////////////////////////////////////////////////////////////////////
-    ///                Exemplu de utilizare cod generat                     ///
-    ///////////////////////////////////////////////////////////////////////////
-    Helper helper;
-    helper.help();
-    ///////////////////////////////////////////////////////////////////////////
+    catch (const std::exception& e) {
+        std::cerr << "Alta exceptie: " << e.what() << std::endl;
+    }
     return 0;
 }

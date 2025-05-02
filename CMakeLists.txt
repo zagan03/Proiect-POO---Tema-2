@@ -51,6 +51,21 @@ include(cmake/CopyHelper.cmake)
 add_executable(${MAIN_EXECUTABLE_NAME}
     main.cpp
     generated/src/Helper.cpp
+    WordValidator.cpp
+    LengthValidator.cpp
+    AlphabetValidator.h
+    AlphabetValidator.cpp
+        FunctiiValidatori.cpp
+    FunctiiValidatori.h
+    DictionaryValidator.cpp
+    DictionaryValidator.h
+    FeedbackStrategy.cpp
+    FeedbackStrategy.h
+    ClassicFeedback.cpp
+    ClassicFeedback.h
+    Game.cpp
+    Game.h
+        ValidatorExceptions.h
 )
 
 # NOTE: Add all defined targets (e.g. executables, libraries, etc. )
