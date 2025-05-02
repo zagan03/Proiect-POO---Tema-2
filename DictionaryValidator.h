@@ -18,13 +18,15 @@ public:
     DictionaryValidator(const std::string& filename);
     DictionaryValidator(const DictionaryValidator& other);
     DictionaryValidator& operator=(DictionaryValidator other);
+
     std::unique_ptr<WordValidator> clone() const override;
     bool validate(const std::string& word) const override;
     void throwExc(const std::string &word) const override;
     void printDetails() const override;
     friend std::ostream& operator<<(std::ostream& os,const DictionaryValidator& dv);
     size_t getWordCount() const;
-    virtual ~DictionaryValidator() {}
     std::string getRandomWord () const ;
+
+    ~DictionaryValidator() override {}
 };
 #endif //DICTIONARYVALIDATOR_H

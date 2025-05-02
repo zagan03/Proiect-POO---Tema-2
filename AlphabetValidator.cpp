@@ -38,8 +38,4 @@ void AlphabetValidator::printDetails() const
     std::cout << "Permite doar litere din alfabetul englez (a - z, A-Z).\n";
 }
 
-std::ostream& operator<<(std::ostream& os, const AlphabetValidator& av) {
-    os << "AlphabetValidator: permite doar litere din alfabetul englez." << std::endl;
-    return os;
-}
 

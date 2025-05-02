@@ -28,7 +28,6 @@ DictionaryValidator::DictionaryValidator(const std::string &filename)
     {
         throw EmptyDictionaryException("Fisierul " + filename + " nu contine cuvinte valide.");
     }
-
 }
 
 
@@ -69,6 +68,7 @@ void DictionaryValidator::printDetails() const
     std::cout << "Valideaza folosind " << dictionar.size() << " cuvinte din dictionar.\n";
 }
 
+// Functie generare cuvant random
 std::string DictionaryValidator::getRandomWord() const
 {
     std::random_device rd;
@@ -83,7 +83,8 @@ std::ostream& operator<<(std::ostream& os, const DictionaryValidator& dv)
     return os;
 }
 
-size_t DictionaryValidator::getWordCount() const {
+size_t DictionaryValidator::getWordCount() const
+{
     return dictionar.size();
 }
 

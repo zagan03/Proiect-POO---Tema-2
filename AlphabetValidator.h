@@ -16,8 +16,7 @@ public:
         bool validate(const std::string &word) const override;
         void throwExc(const std::string &word) const override;
         void printDetails() const override;
-        friend std::ostream& operator<<(std::ostream& os, const AlphabetValidator& av);
-        ~AlphabetValidator() {}
+        ~AlphabetValidator() override {}
 };
 
 

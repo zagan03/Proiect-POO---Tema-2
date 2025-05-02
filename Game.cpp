@@ -67,9 +67,14 @@ void Game::play()
             currentAttempt++;
             std::cout << "Scorul tau este: " << score(currentAttempt, maxAttempts) << std::endl;
         }
-        catch (const ValidatorExceptions& e) {
-            std::cout << "Eroare: " << e.what() << std::endl;
-            std::cout << "Va rugam sa incercati din nou." << std::endl;
+        catch (const LengthValidatorException& e) {
+            std::cout << "Lungimea cuvantului este gresita: " << e.what() << "\n";
+        }
+        catch (const AlphabetValidatorException& e) {
+            std::cout << "Cuvantul contine caractere nepermise: " << e.what() << "\n";
+        }
+        catch (const DictionaryValidatorException& e) {
+            std::cout << "Eroare de validare: " << e.what() << "\n";
         }
     }
 }

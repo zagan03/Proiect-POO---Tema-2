@@ -14,6 +14,7 @@ class LengthValidator : public WordValidator
 public:
     LengthValidator(size_t len = defaultLength);
     LengthValidator(const LengthValidator& other);
+
     std::unique_ptr<WordValidator> clone() const override;
     LengthValidator& operator=(LengthValidator other);
     bool validate(const std::string& word) const override;
@@ -21,7 +22,8 @@ public:
     size_t getLength() const;
     void printDetails() const override;
     friend std::ostream& operator<<(std::ostream& os, const LengthValidator& lv);
-    virtual ~LengthValidator() {}
+
+    ~LengthValidator() override {}
 };
 
 

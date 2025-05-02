@@ -14,13 +14,13 @@ int main()
     {
         std::vector<std::unique_ptr<WordValidator>> validators;
 
-        // Adaugăm validatorii
+        // Adaugam validatorii
         validators.emplace_back(std::make_unique<LengthValidator>(5));
         validators.emplace_back(std::make_unique<AlphabetValidator>());
 
         // Verificam daca fisierul tastatura.txt se deschide
         std::unique_ptr<DictionaryValidator> dict = std::make_unique<DictionaryValidator>("tastatura.txt");
-
+        // aici in cazul in care fisierul nu se deschide se 'arunca' exceptia din constructorul validatorului
         std::string cuvantAles = dict->getRandomWord();
 
         // validam cuvantul ce trebuie ghicit, in cazul in care nu are cinci litere, aruncam exceptie

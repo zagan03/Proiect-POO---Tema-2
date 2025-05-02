@@ -60,6 +60,9 @@ incercarile.
     polimorfic in main() printr-un 'std::vector<std::unique_ptr<WordValidator>>'.
   - functia getFeedback() este functie pur virtuala in 'FeedbackStrategy', redefinita in derivata ClassicFeedback
     si cuprinde logica feedback-ului oferit utilizatorului la fiecare input introdus.
+  - am implementat in clasa de baza (WordValidator) o functie non-virtuala functiePrintare() care apeleaza metoda virtuala pura printDetails() ce permite utilizarea
+  polimorfismului. se poate apela functiePrintare() pe un pointer la WordValidator, iar printDetails() va fi rezolvata corect în funcție de tipul obiectului derivat 
+  (ex: LengthValidator, DictionaryValidator, etc.).
 
 - **Constructori virtuali (clone)**
   - fiecare validator implementeaza un clone() care returneaza un 'std::unique_ptr<WordValidator>'

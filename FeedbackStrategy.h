@@ -2,6 +2,8 @@
 #define FEEDBACKSTRATEGY_H
 #include <string>
 
+// Clasa pentru feedback-ul inputului introdus de utilizator.
+
 class FeedbackStrategy
 {
 public:
