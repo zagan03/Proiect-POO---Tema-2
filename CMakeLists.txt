@@ -55,9 +55,7 @@ add_executable(${MAIN_EXECUTABLE_NAME}
     LengthValidator.cpp
     AlphabetValidator.h
     AlphabetValidator.cpp
-        FunctiiValidatori.cpp
-    FunctiiValidatori.h
-    DictionaryValidator.cpp
+        DictionaryValidator.cpp
     DictionaryValidator.h
     FeedbackStrategy.cpp
     FeedbackStrategy.h
