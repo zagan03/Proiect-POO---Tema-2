@@ -8,6 +8,10 @@
 #include <iostream>
 #include "ValidatorExceptions.h"
 
+
+
+
+
 int main()
 {
     try
@@ -29,26 +33,11 @@ int main()
         validators.emplace_back(dict->clone());
         if (validators.empty())
             throw ValidatorExceptions("Lista de validatori este goala. Nu putemm continua jocul");
+
         Game Joc(cuvantAles, validators, 6);
 
         // Folosit pentru a arata utilizatorului Regulile in functie de care trebuie alese cuvintele.
-
-        for (const auto& validator : validators) {
-            std::cout << "Clasa de baza: WordValidator | Clasa derivata: ";
-
-            if (auto lengthValidator = dynamic_cast<LengthValidator*>(validator.get())) {
-                std::cout << "LengthValidator\n";
-                std::cout << *lengthValidator;
-            }
-            else if (auto dictValidator = dynamic_cast<DictionaryValidator*>(validator.get())) {
-                std::cout << "DictionaryValidator\n";
-                std::cout << *dictValidator;
-            }
-            else if (auto alphaValid = dynamic_cast<AlphabetValidator*>(validator.get())) {
-                std::cout << "AlphabetValidator\n";
-                alphaValid->printDetails();
-            }
-        }
+        Joc.printValidatorTypes();
 
         // Rulam jocul
         Joc.play();

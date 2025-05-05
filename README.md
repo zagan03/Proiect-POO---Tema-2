@@ -50,11 +50,17 @@ incercarile.
 
 ### Indeplinire cerinte:
 - **Clase mostenite**:
-  - 'WordValidator' = clasa abstracta de baza
-  - Derivate : 'LengthValidator', 'AlphabetValidator', 'DictionaryValidator'
-  - 'FeedbackStrategy' = clasa abstracta de baza
-  - 'ClassicFeedback' = clasa derivata care se foloseste pentru feedback-ul din linia de comanda.
-
+  - 'WordValidator' = clasa abstracta de baza ce cuprinde validatorii cuvantului introdus de catre utilizator.
+    - Derivate : 'LengthValidator' = valideaza lungimea cuvantului ( lungimea trebuie sa fie egala cu 5).
+                                   = ca si date membru, avem requiredLength = lungimea necesara si defaultLength care este un atribut static ce reprezinta lungimea 'default' cu care este initializat obiectul de tip LengthValidator.
+                 'AlphabetValidator' = valideaza caracterele cuvantului (caracterele trebuie sa fie litere ale alfabetului englez a-z sau A-Z).
+                 'DictionaryValidator' = verifica daca cuvantul introdus de utilizator se afla in dictionarul limbii romane ( care este definit in fisierul tastatura.txt).
+                                       = ca si data membru, avem un vector 'dictionar' in care sunt stocate cuvintele din dictionarul jocului.
+  - 'FeedbackStrategy' = clasa abstracta de baza care cuprinde strategia de feedback, si anume, modalitatea de afisare a corectitudinii inputului introdus de utilizator.
+                 'ClassicFeedback' = clasa derivata care se foloseste pentru feedback-ul in linia de comanda. Mai exact, literele colorate cu verde sunt la locul potrivit, literele 
+                                     colorate cu galben se afla in cuvant, dar nu pe pozitia corespunzatoare, iar literele gri nu se regasesc in cuvant.
+                                   = regasim aici doua functii: toLowerCase() care este statica si transforma literele in litere mici, precum si functia getFeedback() care ofera utilizatorului feedback-ul vizual al cuvantului 
+                                     introdus prin colorarea literelor in functie de regulile specificate mai sus.
 - **Functii virtuale**
   - 'validate() este functie pur virtuala in 'WordValidator', redefinita in fiecare derivata si este apelata 
     polimorfic in main() printr-un 'std::vector<std::unique_ptr<WordValidator>>'.
@@ -77,17 +83,17 @@ incercarile.
   - derivatele apeleaza constructorul de baza WordValidator cu parametri comuni
 
 - **Pointer de baza cu functie virtuala**
-  - folosesc un `std::vector<std::unique_ptr<WordValidator>>` pentru a stoca validatori si a apela `validate()`
+  - in clasa Game, folosesc un `std::vector<std::unique_ptr<WordValidator>>` pentru a stoca validatorii si a apela  functia virtuala `validate()`.
 
 - **`dynamic_cast`**:
-  - in `main()` folosesc `dynamic_cast` pentru a realiza downcasting din clasa de baza `WordValidator` catre clasele derivate. Acest mecanism imi permite sa identific dinamic tipul fiecarui validator,
+  - in functia `printValidatorTypes()` din clasa `Game`, folosesc `dynamic_cast` pentru a realiza downcasting din clasa de baza `WordValidator` catre clasele derivate. Acest mecanism imi permite sa identific dinamic tipul fiecarui validator,
   stocat in vectorul validators, astfel incat sa pot afisa pe ecran utilizatorului regulile specifice fiecarui validator.
-  - de asemenea, pentru toate clasele derivate ale validatorilor, am implementat:
+  - de asemenea, pentru clasa Game, am implementat:
     - constructori de copiere
-    - operatorul copy and swap
-    - operator de afisare
-    - destructor
-
+    - operatorul copy and swap =  este folosit in functia `play()` din `Game` pentru a oferi utilizatorului sanse noi de a ghici cuvantul, ca si runde bonus.
+                               =  in momentul in care utilizatorul a ramas fara sanse de a ghici cuvantul, este intrebat daca doreste sa mai incerce, iar in caz afirmativ, 
+                                  prin operatorul copy and swap, se creeaza o copie a jocului curent, permitand utilizatorului sa joace in continuare fara a crea o instanta complet noua de joc.
+ 
 - **Smart pointers**:
   - `std::unique_ptr` este folosit pentru gestionarea dinamica a validatorilor.
 
