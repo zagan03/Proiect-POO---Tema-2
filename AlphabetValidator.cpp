@@ -5,8 +5,6 @@
 #include <cctype> // pt isalpha
 #include <memory>
 
-
-
 bool AlphabetValidator::validate(const std::string &word) const
 {
     for (char c : word)

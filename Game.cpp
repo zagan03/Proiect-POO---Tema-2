@@ -1,21 +1,24 @@
 #include "Game.h"
-#include <vector>
-#include <memory>
-
 #include "ValidatorExceptions.h"
 #include "ClassicFeedback.h"
+#include "NoFeedback.h"
 #include "FeedbackStrategy.h"
 #include "WordValidator.h"
 #include "AlphabetValidator.h"
 #include "DictionaryValidator.h"
 #include "LengthValidator.h"
+#include <vector>
+#include <memory>
+// Constanta folosita la calculul scorului
+const int Game::SCORE_MULTIPLIER = 20;
 
 Game::Game(const std::string& raspuns,
            const std::vector<std::unique_ptr<WordValidator>>& val,
            const int& incercari_max)
     : answer(raspuns),
       currentAttempt(0),
-      maxAttempts(incercari_max)
+      maxAttempts(incercari_max),
+      scoreGame(0)
 {
     for (const auto& v : val)
         validatori.push_back(v->clone()); // facem o clona a validatorului si o punem in validatori
@@ -40,21 +43,45 @@ Game& Game::operator=(Game other)
 }
 
 
-
-int Game::score(const int &currentAttempt, const int &maxAttempts)
+// Formula Calcul scor
+int Game::score(const int &currentAttempt, const int &maxAttempts, const int &difficultyMultiplier)
 {
-    return (maxAttempts - currentAttempt) * 20;
+    return (maxAttempts - currentAttempt) * SCORE_MULTIPLIER * difficultyMultiplier;
 }
+
 
 void Game::printRemainingAttempts(const int &currentAttempt, const int &maxAttempts)
 {
     std::cout << "Mai ai " << maxAttempts - currentAttempt << " incercari ramase." << std::endl;
 }
 
-void Game::play()
-{
+std::unique_ptr<FeedbackStrategy> Game::alegeModFeedback() {
+    std::string choice;
+    std::cout << "Alege Modul de joc:\n";
+    std::cout << "1. ClassicFeedback (Usor)\n";
+    std::cout << "2. NoFeedback (Very Hard)\n";
+    std::cin >> choice;
+
+    if (choice == "1") return std::make_unique<ClassicFeedback>();
+    else if (choice == "2") return std::make_unique<NoFeedback>();
+    else {
+        std::cout << "Optiune invalida. Se selecteaza modul clasic implicit.\n";
+        return std::make_unique<ClassicFeedback>();
+    }
+}
+
+
+void Game::play() {
+    std::cout<<answer;
     std::string input;
-    std::unique_ptr<FeedbackStrategy> feedback = std::make_unique<ClassicFeedback>();
+    std::unique_ptr<FeedbackStrategy> feedback = alegeModFeedback();
+    int difficultyMultiplier = 1; // multiplicator pentru scor
+
+    // Daca Feedback-ul este NoFeedback => Putem obtine un scor mai mare
+    if (dynamic_cast<NoFeedback*>(feedback.get())) {
+        difficultyMultiplier = 2;
+    }
+
     while (currentAttempt < maxAttempts)
     {
         std::cout << "Introdu un cuvant format din 5 litere: \n";
@@ -79,25 +106,29 @@ void Game::play()
                 std::cout << "Felicitari! Ati ghicit cuvantul!" << std::endl;
                 if (retryAfterFailure) {
                     std::cout << "Ati ghicit in runda bonus. Scorul este 0.\n";
+                    scoreGame = 0;
                     break;
                 }
-                std::cout << "Scorul dvs. : " << score(currentAttempt,maxAttempts) << std::endl;
+                scoreGame = score(currentAttempt,maxAttempts,difficultyMultiplier);
+                std::cout << "Scorul dvs. : " << scoreGame << std::endl;
                 break;
             }
             else if (input != answer && currentAttempt == maxAttempts - 1)
             {
                 currentAttempt++;
-                std::string raspuns;
-                std::cout << "Scorul dvs. : " << score(currentAttempt,maxAttempts) << std::endl;
-                std::cout << "Ne pare rau! Nu ati ghicit cuvantul. Mai doriti inca o incercare? " << std::endl;
+                std::string ans;
+                scoreGame = score(currentAttempt,maxAttempts,difficultyMultiplier);
+                std::cout << "Scorul dvs. : " << score(currentAttempt,maxAttempts,difficultyMultiplier) << std::endl;
+                std::cout << "Ne pare rau! Nu ati ghicit cuvantul. Mai doriti inca o incercare? (Apasa 'da' pentru inca o incercare) " << std::endl;
                 std::cout << "Daca nu doriti, scrieti orice pentru a vedea raspunsul." << std::endl;
-                std::cin >> raspuns;
-                if (raspuns == "da" || raspuns == "DA")
+                std::cin >> ans;
+                if (ans == "da" || ans == "DA")
                 {
                     // folosit pentru demonstratia utilizarii operatorului copy and swap
                     currentAttempt--;
                     Game Joc2 = *this;
                     Joc2.retryAfterFailure = true;
+                    Joc2.scoreGame = 0;
                     Joc2.play();
                     break;
                 }
@@ -108,7 +139,8 @@ void Game::play()
                 }
             }
             currentAttempt++;
-            std::cout << "Scorul dvs este: am intrat " << score(currentAttempt, maxAttempts) << std::endl;
+            scoreGame = score(currentAttempt, maxAttempts,difficultyMultiplier);
+            std::cout << "Scorul dvs este: " << scoreGame << std::endl;
         }
         catch (const LengthValidatorException& e)
         {
@@ -125,6 +157,8 @@ void Game::play()
     }
 }
 
+
+// Afisarea regulilor de validare a cuvintelor la inceputul programului.
 
 void Game::printValidatorTypes() const {
     for (const auto& validator : validatori) {

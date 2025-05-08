@@ -59,5 +59,5 @@ std::string ClassicFeedback::getFeedback(const std::string &input, const std::st
     std::cout << '\n';
     return "";
 }
-// stocam numarul de aparitii ale unei litere si dupa ne folosim de el ca sa stim cate litere
+// stocam numarul de aparitii al unei litere si dupa ne folosim de el ca sa stim cate litere
 // din acel fel poate avea cuvantul colorate cu galben/verde

@@ -1,7 +1,3 @@
-//
-// Created by zagan on 4/16/2025.
-//
-
 #ifndef LENGTHVALIDATOR_H
 #define LENGTHVALIDATOR_H
 #include "WordValidator.h"
@@ -9,10 +5,11 @@
 
 class LengthValidator : public WordValidator
 {
-    size_t requiredLength;
-    static size_t defaultLength;
+private:
+    unsigned int requiredLength;
+    static int defaultLength;
 public:
-    LengthValidator(size_t len = defaultLength);
+    LengthValidator(unsigned int len = defaultLength);
     LengthValidator(const LengthValidator& other);
 
     std::unique_ptr<WordValidator> clone() const override;

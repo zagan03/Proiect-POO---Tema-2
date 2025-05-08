@@ -8,40 +8,40 @@
 // constructor initializare
 DictionaryValidator::DictionaryValidator(const std::string &filename)
 {
-    std::ifstream fisier(filename);
+    std::ifstream file(filename);
 
-    if (!fisier.is_open())
+    if (!file.is_open())
     {
         throw DictionaryValidatorException("Nu s-a putut deschide fisierul: " + filename);
     }
 
     std::string line;
-    while (std::getline(fisier,line))
+    while (std::getline(file,line))
     {
         if (!line.empty())
         {
-         dictionar.push_back(line);
+         dictionary.push_back(line);
         }
     }
 
-    if (dictionar.empty())
+    if (dictionary.empty())
     {
         throw EmptyDictionaryException("Fisierul " + filename + " nu contine cuvinte valide.");
     }
 }
 
 
-    DictionaryValidator::DictionaryValidator(const DictionaryValidator& other) : dictionar(other.dictionar) {}
+    DictionaryValidator::DictionaryValidator(const DictionaryValidator& other) : dictionary(other.dictionary) {}
     // Operator copy and swap
     DictionaryValidator& DictionaryValidator::operator=(DictionaryValidator other)
     {
-    std::swap(dictionar, other.dictionar);
+    std::swap(dictionary, other.dictionary);
     return *this;
     }
 
 bool DictionaryValidator::validate (const std::string &word) const
 {
-    if (std::find(dictionar.begin(), dictionar.end(), word) == dictionar.end())
+    if (std::find(dictionary.begin(), dictionary.end(), word) == dictionary.end())
     {
         return false;
     }
@@ -65,7 +65,7 @@ std::unique_ptr<WordValidator> DictionaryValidator::clone() const
 
 void DictionaryValidator::printDetails() const
 {
-    std::cout << "Valideaza folosind " << dictionar.size() << " cuvinte din dictionar.\n";
+    std::cout << "Valideaza folosind " << dictionary.size() << " cuvinte din dictionar.\n";
 }
 
 // Functie generare cuvant random
@@ -73,8 +73,8 @@ std::string DictionaryValidator::getRandomWord() const
 {
     std::random_device rd;
     std::mt19937 gen(rd());
-    std::uniform_int_distribution<> dist(0,dictionar.size()-1);
-    return dictionar[dist(gen)];
+    std::uniform_int_distribution<> dist(0,dictionary.size()-1);
+    return dictionary[dist(gen)];
 }
 
 std::ostream& operator<<(std::ostream& os, const DictionaryValidator& dv)
@@ -83,8 +83,8 @@ std::ostream& operator<<(std::ostream& os, const DictionaryValidator& dv)
     return os;
 }
 
-size_t DictionaryValidator::getWordCount() const
+int DictionaryValidator::getWordCount() const
 {
-    return dictionar.size();
+    return dictionary.size();
 }
 

@@ -24,17 +24,16 @@ int main()
 
         // Verificam daca fisierul tastatura.txt se deschide
         std::unique_ptr<DictionaryValidator> dict = std::make_unique<DictionaryValidator>("tastatura.txt");
-        // aici in cazul in care fisierul nu se deschide se 'arunca' exceptia din constructorul validatorului
-        std::string cuvantAles = dict->getRandomWord();
-
+        // aici in cazul in care fisierul nu se deschide, se 'arunca' exceptia din constructorul validatorului
+        std::string chosenWord = dict->getRandomWord();
         // validam cuvantul ce trebuie ghicit, in cazul in care nu are cinci litere, aruncam exceptie
-        if (cuvantAles.length() != 5)
-            throw ValidatorExceptions("Cuvantul din dictionar nu are 5 litere!" + cuvantAles);
+        if (chosenWord.length() != 5)
+            throw ValidatorExceptions("Cuvantul din dictionar nu are 5 litere!" + chosenWord);
         validators.emplace_back(dict->clone());
         if (validators.empty())
             throw ValidatorExceptions("Lista de validatori este goala. Nu putemm continua jocul");
 
-        Game Joc(cuvantAles, validators, 6);
+        Game Joc(chosenWord, validators, 6);
 
         // Folosit pentru a arata utilizatorului Regulile in functie de care trebuie alese cuvintele.
         Joc.printValidatorTypes();

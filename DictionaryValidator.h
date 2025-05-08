@@ -13,7 +13,8 @@
 
 class DictionaryValidator: public WordValidator
 {
-    std::vector<std::string> dictionar;
+private:
+    std::vector<std::string> dictionary;
 public:
     DictionaryValidator(const std::string& filename);
     DictionaryValidator(const DictionaryValidator& other);
@@ -24,7 +25,7 @@ public:
     void throwExc(const std::string &word) const override;
     void printDetails() const override;
     friend std::ostream& operator<<(std::ostream& os,const DictionaryValidator& dv);
-    size_t getWordCount() const;
+    int getWordCount() const;
     std::string getRandomWord () const ;
 
     ~DictionaryValidator() override {}

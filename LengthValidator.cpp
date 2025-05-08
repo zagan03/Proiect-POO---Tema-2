@@ -5,8 +5,8 @@
 #include <vector>
 #include <memory>
 
-    size_t LengthValidator::defaultLength = 5;
-    LengthValidator::LengthValidator(size_t len): requiredLength(len) {} // dimensiune automata de 5
+    int LengthValidator::defaultLength = 5;
+    LengthValidator::LengthValidator(unsigned int len): requiredLength(len) {} // dimensiune automata de 5
 
     bool LengthValidator::validate(const std::string &cuvant) const
     {

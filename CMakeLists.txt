@@ -64,6 +64,8 @@ add_executable(${MAIN_EXECUTABLE_NAME}
     Game.cpp
     Game.h
         ValidatorExceptions.h
+        NoFeedback.h
+        NoFeedback.cpp
 )
 
 # NOTE: Add all defined targets (e.g. executables, libraries, etc. )

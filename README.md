@@ -3,12 +3,15 @@
 ### Descriere Generala
   Proiectul abordeaza un joc in linia de comanda unde utilizatorul trebuie sa ghiceasca un cuvant secret format
 din 5 litere. Cuvintele sunt validate pe baza unor reguli, iar utilizatorul primeste feedback dupa fiecare 
-incercare, cu privire la pozitiile literelor.
-
+incercare, cu privire la pozitiile literelor. Scorul la inceputul jocului este 120, iar la fiecare incercare nereusita, 
+scorul scade cu 20 de puncte. Jucatorul isi alege la inceput modalitatea de feedback, care poate fi:
+  - regular (easy), primesti feedback referitor la pozitia literelor.
+  - very hard, nu primesti niciun fel de feedback si niciun ajutor, trebuie doar sa ghicesti cuvantul.
 ### Cum se joaca ?
-1. La inceputul jocului, se genereaza automat un cuvant secret de 5 litere dintr-un dictionar care se afla in 
+1. La inceputul jocului, jucatorul isi alege dificultatea,iar mai apoi se genereaza automat un cuvant secret de 5 litere dintr-un dictionar care se afla in 
 fisierul tastatura.txt.
-2. Utilizatorul are 6 incercari pentru a ghici acest cuvant, iar scorul maxim pe care il poate obtine este 120.
+2. Utilizatorul are 6 incercari pentru a ghici acest cuvant, iar scorul maxim pe care il poate obtine este 120 in cazul modului regular, iar
+240 in cazul modului Very Hard.
 3. Dupa fiecare incercare:
    - daca cuvantul introdus nu este valid (nu are 5 litere, contine caractere invalide sau nu exista in dictionar)
      utilizatorul va primi o eroare si va putea incerca din nou.
@@ -17,6 +20,7 @@ fisierul tastatura.txt.
    corecta, iar cu gri, literele care nu se afla in cuvant.
 4. Jocul se termina fie cand cuvantul este ghicit in limita a celor 6 incercari, fie cand se epuizeaza toate 
 incercarile.
+5. Jucatorul mai poate incerca la final ori de cate ori vrea sa ghiceasca cuvantul, insa scorul va ramane la 0.
 
 ### Reguli de validare a cuvintelor :
 1. Cuvantul trebuie sa aiba exact 5 litere. (LengthValidator)
@@ -61,6 +65,16 @@ incercarile.
                                      colorate cu galben se afla in cuvant, dar nu pe pozitia corespunzatoare, iar literele gri nu se regasesc in cuvant.
                                    = regasim aici doua functii: toLowerCase() care este statica si transforma literele in litere mici, precum si functia getFeedback() care ofera utilizatorului feedback-ul vizual al cuvantului 
                                      introdus prin colorarea literelor in functie de regulile specificate mai sus.
+                 'NoFeedback' - clasa derivata care nu ofera niciun fel de feedback, introducand un mod de joc mult mai greu si mai challenging pentru utilizator
+                              - regasim aceleasi functii, `toLowerCase()` care este statica + getFeedback care afiseaza un mesaj de informare.
+  - Alte Clase: `Game` -> atribute : answer (raspunsul corect), un vector de pointeri catre obiecte de tip WordValidator, currentAttempt (incercarea curenta) si maxAttempts(nr maxim de incercari posibile = 6),
+                                     retryAfterFailure = de tip bool, folosit in cazul in care utilizatorul mai vrea sa incerce sa ghiceasca cuvantul dupa ce a epuizat cele 6 incercari,
+                                     scoreGame = retine scorul utilizatorului
+                       -> functii : play() = initializeaza sesiunea jocului
+                                    score() = calculeaza scorul dupa fiecare incercare
+                                    printRemainingAttempts() = afiseaza incercarile ramase
+                                    alegeModFeedback() = permite utilizatorului sa isi aleaga dificultatea si implicit modalitatea de feedback
+                                    printValidatorTypes() = este o functie in care folosim dynamic_cast pentru a vedea tipul real al validatorilor si care afiseaza regulile fiecarui validator. 
 - **Functii virtuale**
   - 'validate() este functie pur virtuala in 'WordValidator', redefinita in fiecare derivata si este apelata 
     polimorfic in main() printr-un 'std::vector<std::unique_ptr<WordValidator>>'.
@@ -96,6 +110,7 @@ incercarile.
  
 - **Smart pointers**:
   - `std::unique_ptr` este folosit pentru gestionarea dinamica a validatorilor.
+  - am folosit si `std::make_unique` pentru a crea unique_ptr catre obiecte
 
 - **Exceptii**:
   - clasa `ValidatorExceptions` derivă din `std::exception`.

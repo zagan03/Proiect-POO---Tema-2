@@ -17,7 +17,6 @@ public:
     virtual void throwExc(const std::string &word) const = 0;
     void functiePrintare() const;
     virtual void printDetails() const = 0;
-
     virtual ~WordValidator() = default;
 };
 
