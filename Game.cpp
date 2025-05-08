@@ -72,7 +72,6 @@ std::unique_ptr<FeedbackStrategy> Game::alegeModFeedback() {
 
 
 void Game::play() {
-    std::cout<<answer;
     std::string input;
     std::unique_ptr<FeedbackStrategy> feedback = alegeModFeedback();
     int difficultyMultiplier = 1; // multiplicator pentru scor
