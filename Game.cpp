@@ -28,7 +28,8 @@ Game::Game(const Game& other)
     : answer(other.answer),
       currentAttempt(other.currentAttempt),
       maxAttempts(other.maxAttempts),
-      retryAfterFailure(other.retryAfterFailure)
+      retryAfterFailure(other.retryAfterFailure),
+      scoreGame(other.scoreGame)
 {
     for (const auto& validator : other.validatori)
         validatori.push_back(validator->clone());
@@ -39,9 +40,9 @@ Game& Game::operator=(Game other)
     std::swap(answer, other.answer);
     std::swap(currentAttempt, other.currentAttempt);
     std::swap(validatori, other.validatori);
+    std::swap(scoreGame, other.scoreGame);
     return *this;
 }
-
 
 // Formula Calcul scor
 int Game::score(const int &currentAttempt, const int &maxAttempts, const int &difficultyMultiplier)

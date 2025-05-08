@@ -11,6 +11,7 @@ std::string ClassicFeedback::toLowerCase(const std::string& word)
 {
     std::string result = word;
     std::transform(result.begin(), result.end(), result.begin(), ::tolower);
+    // std::transform(start, end, destination_start, function);
     return result;
 }
 
@@ -39,7 +40,7 @@ std::string ClassicFeedback::getFeedback(const std::string &input, const std::st
         Aparitii[ch]++; // vector de frecventa
         }
 
-    for (size_t i = 0; i < input.size(); i++)
+    for (unsigned int i = 0; i < input.size(); i++)
         {
         if (input[i] == answer[i] && Aparitii[input[i]] > 0)
         {

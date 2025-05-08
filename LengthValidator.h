@@ -16,10 +16,8 @@ public:
     LengthValidator& operator=(LengthValidator other);
     bool validate(const std::string& word) const override;
     void throwExc(const std::string& word) const override;
-    size_t getLength() const;
     void printDetails() const override;
     friend std::ostream& operator<<(std::ostream& os, const LengthValidator& lv);
-
     ~LengthValidator() override {}
 };
 

@@ -6,7 +6,7 @@
 #include <memory>
 
     int LengthValidator::defaultLength = 5;
-    LengthValidator::LengthValidator(unsigned int len): requiredLength(len) {} // dimensiune automata de 5
+    LengthValidator::LengthValidator(const unsigned int len): requiredLength(len) {} // dimensiune automata de 5
 
     bool LengthValidator::validate(const std::string &cuvant) const
     {
@@ -35,11 +35,6 @@
     {
         std::swap(requiredLength, other.requiredLength);
         return *this;
-    }
-
-    size_t LengthValidator::getLength() const
-    {
-        return requiredLength;
     }
 
     void LengthValidator::printDetails() const
