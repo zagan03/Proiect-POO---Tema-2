@@ -12,37 +12,29 @@
 // Constanta folosita la calculul scorului
 const int Game::SCORE_MULTIPLIER = 20;
 
+// instanta unica pentru singleton
+std::unique_ptr<Game> Game::instance = nullptr;
+
+Game& Game::getInstance(const std::string& raspuns,
+                        const std::vector<std::unique_ptr<WordValidator>>& val,
+                        const int& incercari_max) {
+    if (!instance) {
+        instance = std::unique_ptr<Game>(new Game(raspuns, val, incercari_max));
+    }
+    return *instance;
+}
+
+
+// Constructor privat
 Game::Game(const std::string& raspuns,
            const std::vector<std::unique_ptr<WordValidator>>& val,
            const int& incercari_max)
-    : answer(raspuns),
-      currentAttempt(0),
-      maxAttempts(incercari_max),
-      scoreGame(0)
-{
+        : answer(raspuns), currentAttempt(0), maxAttempts(incercari_max) {
     for (const auto& v : val)
-        validatori.push_back(v->clone()); // facem o clona a validatorului si o punem in validatori
+        validatori.push_back(v->clone());
 }
 
-Game::Game(const Game& other)
-    : answer(other.answer),
-      currentAttempt(other.currentAttempt),
-      maxAttempts(other.maxAttempts),
-      retryAfterFailure(other.retryAfterFailure),
-      scoreGame(other.scoreGame)
-{
-    for (const auto& validator : other.validatori)
-        validatori.push_back(validator->clone());
-}
 
-Game& Game::operator=(Game other)
-{
-    std::swap(answer, other.answer);
-    std::swap(currentAttempt, other.currentAttempt);
-    std::swap(validatori, other.validatori);
-    std::swap(scoreGame, other.scoreGame);
-    return *this;
-}
 
 // Formula Calcul scor
 int Game::score(const int &currentAttempt, const int &maxAttempts, const int &difficultyMultiplier)
@@ -73,6 +65,7 @@ std::unique_ptr<FeedbackStrategy> Game::alegeModFeedback() {
 
 
 void Game::play() {
+    std::cout << answer;
     std::string input;
     std::unique_ptr<FeedbackStrategy> feedback = alegeModFeedback();
     int difficultyMultiplier = 1; // multiplicator pentru scor
@@ -104,8 +97,8 @@ void Game::play() {
             if (input == answer)
             {
                 std::cout << "Felicitari! Ati ghicit cuvantul!" << std::endl;
-                if (retryAfterFailure) {
-                    std::cout << "Ati ghicit in runda bonus. Scorul este 0.\n";
+                if (maxAttempts > 6) {
+                    std::cout << "Ati ghicit in runda bonus din " << maxAttempts <<" incercari. Scorul este 0.\n";
                     scoreGame = 0;
                     break;
                 }
@@ -124,13 +117,9 @@ void Game::play() {
                 std::cin >> ans;
                 if (ans == "da" || ans == "DA")
                 {
-                    // folosit pentru demonstratia utilizarii operatorului copy and swap
-                    currentAttempt--;
-                    Game Joc2 = *this;
-                    Joc2.retryAfterFailure = true;
-                    Joc2.scoreGame = 0;
-                    Joc2.play();
-                    break;
+                    addExtraAttempt();
+                    scoreGame = 0;
+                    continue;
                 }
                 else
                 {
@@ -171,13 +160,19 @@ void Game::printValidatorTypes() const {
             std::cout << "DictionaryValidator\n";
             std::cout << *dictValidator;
         }
-        else if (const auto* alphaValid = dynamic_cast<AlphabetValidator*>(validator.get())) {
+        else if (const auto* alphaValid = dynamic_cast<AlphabetValidator<std::unordered_set<char>>*>(validator.get()))
+        {
             std::cout << "AlphabetValidator\n";
             alphaValid -> printDetails();
         }
         else
             std::cout << "Necunoscut\n";
     }
+}
+
+void Game::addExtraAttempt() {
+    maxAttempts++;
+    std::cout << "Ai primit o incercare bonus! Total incercari: " << maxAttempts << "\n";
 }
 
 

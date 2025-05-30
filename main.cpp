@@ -7,7 +7,32 @@
 #include "DictionaryValidator.h"
 #include <iostream>
 #include "ValidatorExceptions.h"
+#include "WordleFactory.h"
+/* Zagan Claudiu Gabriel - Grupa 133.
 
+Modificari TEMA 3 :
+
+1. CLASA TEMPLATE:
+       - Am transformat clasa AlphabetValidator intr-o clasa template:
+         AlphabetValidator<T>, unde T este o colectie de caractere permise
+         (in cazul nostru, std::unordered_set<char>).
+       - Clasa permite acum validarea pe baza unui set personalizat de caractere.
+       - Am adaugat si o functie membru care verifica daca un caracter este permis,
+         precum si operatorul << pentru afisare.
+
+    2. SINGLETON:
+       - Clasa Game a fost modificata pentru a respecta design pattern-ul Singleton.
+       - Acum exista o singura instanta a jocului, accesibila prin Game::getInstance().
+       - Constructorul Game este privat, iar instanta este gestionata static.
+
+    3. FACTORY METHOD:
+       - Am adaugat clasa WordleFactory, care construieste si returneaza
+         o instanta completa de Game pregatita pentru rulare.
+       - Aceasta fabrica automat validatori, incarca un cuvant random
+         din dictionar si configureaza jocul cu un numar standard de incercari.
+       - Factory-ul simplifica foarte mult codul din main() si permite
+         testarea rapida sau rularea directa a jocului.
+*/
 
 
 
@@ -16,32 +41,14 @@ int main()
 {
     try
     {
-        std::vector<std::unique_ptr<WordValidator>> validators;
-
-        // Adaugam validatorii
-        validators.emplace_back(std::make_unique<LengthValidator>(5));
-        validators.emplace_back(std::make_unique<AlphabetValidator>());
-
-        // Verificam daca fisierul tastatura.txt se deschide
-        std::unique_ptr<DictionaryValidator> dict = std::make_unique<DictionaryValidator>("tastatura.txt");
-        // aici in cazul in care fisierul nu se deschide, se 'arunca' exceptia din constructorul validatorului
-        std::string chosenWord = dict->getRandomWord();
-        // validam cuvantul ce trebuie ghicit, in cazul in care nu are cinci litere, aruncam exceptie
-        if (chosenWord.length() != 5)
-            throw ValidatorExceptions("Cuvantul din dictionar nu are 5 litere!" + chosenWord);
-        validators.emplace_back(dict->clone());
-        if (validators.empty())
-            throw ValidatorExceptions("Lista de validatori este goala. Nu putemm continua jocul");
-
-        Game Joc(chosenWord, validators, 6);
-
+        Game& joc = WordleFactory::createDefaultGame();
         // Folosit pentru a arata utilizatorului Regulile in functie de care trebuie alese cuvintele.
-        Joc.printValidatorTypes();
+        joc.printValidatorTypes();
 
         // Rulam jocul
-        Joc.play();
+        joc.play();
     }
-    catch (const ValidatorExceptions& e) {
+    catch (const ValidatorExceptions& e) { // upcasting
         std::cerr << "Exceptie prinsa in main: " << e.what() << std::endl;
     }
     catch (const std::exception& e) {

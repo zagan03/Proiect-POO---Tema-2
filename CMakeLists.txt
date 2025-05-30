@@ -66,6 +66,8 @@ add_executable(${MAIN_EXECUTABLE_NAME}
         ValidatorExceptions.h
         NoFeedback.h
         NoFeedback.cpp
+        WordleFactory.cpp
+        WordleFactory.h
 )
 
 # NOTE: Add all defined targets (e.g. executables, libraries, etc. )

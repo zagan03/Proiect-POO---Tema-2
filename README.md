@@ -138,6 +138,31 @@ incercarile.
 - **Nivel înalt, fără getters/setters inutile**:
   - functiile de validare si feedback sunt centralizate si nu expun datele interne inutil.
 
+## Modificari TEMA 3 :
+
+1. CLASA TEMPLATE:
+   - Am transformat clasa AlphabetValidator intr-o clasa template:
+   AlphabetValidator<T>, unde T este o colectie de caractere permise
+   (in cazul nostru, std::unordered_set<char>).
+   - Clasa permite acum validarea pe baza unui set personalizat de caractere.
+   - Am adaugat si o functie membru care verifica daca un caracter este permis,
+   precum si operatorul << pentru afisare.
+
+2. SINGLETON:
+    - Clasa Game a fost modificata pentru a respecta design pattern-ul Singleton.
+    - Acum exista o singura instanta a jocului, accesibila prin Game::getInstance().
+    - Constructorul Game este privat, iar instanta este gestionata static.
+
+3. FACTORY METHOD:
+    - Am adaugat clasa WordleFactory, care construieste si returneaza
+      o instanta completa de Game pregatita pentru rulare.
+    - Aceasta fabrica automat validatori, incarca un cuvant random
+      din dictionar si configureaza jocul cu un numar standard de incercari.
+    - Factory-ul simplifica foarte mult codul din main() si permite
+      testarea rapida sau rularea directa a jocului.
+      
+
+
 
 #### Instrucțiuni de compilare
 
