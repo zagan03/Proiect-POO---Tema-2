@@ -44,7 +44,6 @@ int main()
         Game& joc = WordleFactory::createDefaultGame();
         // Folosit pentru a arata utilizatorului Regulile in functie de care trebuie alese cuvintele.
         joc.printValidatorTypes();
-
         // Rulam jocul
         joc.play();
     }
